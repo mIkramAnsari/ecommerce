@@ -32,7 +32,7 @@ class User {
 
     let user = await UserServices.getUser({ email });
     if (user) {
-      // mailer.emailSender(to);
+        // mailer.emailSender();
       return existAlreadyResponse(res, messageUtil.emailAlreadyExist);
     }
     
@@ -42,7 +42,7 @@ class User {
     });
     user.password = await bcryptHash(password);
     await user.save();
-    // mailer.emailSender(to);
+      // mailer.emailSender();
     return successResponse(res, messageUtil.ok, user);
   };
 
