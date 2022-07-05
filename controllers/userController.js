@@ -40,7 +40,7 @@ class User {
     });
     user.password = await bcryptHash(password);
     await user.save();
-    mailer.emailSender(email);
+    // mailer.emailSender(email);
     return successResponse(res, messageUtil.ok, user);
   };
 
