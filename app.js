@@ -5,7 +5,6 @@ require('./utils/cronJob')
 dotenv.config({path:'./config.env'});
 const routes = require('./routers/routes')
 const cors = require('cors')
-
 const app = express();
 
 
