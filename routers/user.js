@@ -14,4 +14,7 @@ router.get("/carts",checkToken,User.carts),
 router.post("/removeCart/:id", checkToken,User.removeCart);
 
 
+router.get("/stats", User.stats)
+
+
 module.exports = router;

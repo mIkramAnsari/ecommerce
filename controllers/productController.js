@@ -1,5 +1,8 @@
 const productServices = require("../services/productServices")
 const userServices = require("../services/userServices")
+bodyParser = require('body-parser'),
+jsonParser = bodyParser.json();
+const productSchema = require("../model/product");
 
 const checkFields = require("../utils/checkFields");
 const {
@@ -93,10 +96,28 @@ class Product{
       } 
 
     products = async (req,res) =>{
-      let products = await productServices.allProducts();
-      if(products){
-        // res.send({products});
-        return successResponse(res, messageUtil.ok, products);
+      try {
+        let { limit ,page } = req.query;
+        if (!page) {
+            page = 1;
+        }
+        if (!limit) {
+            limit = 3;
+        }
+        const size = parseInt(limit);
+        page = parseInt(page);
+        let skip = (page - 1) * size;
+        const products = await productSchema.find().skip(skip).sort(
+            { votes: 1, _id: 1 }).limit(size)
+            const noOfProducts = await productSchema.count();
+        res.send({
+            noOfProducts,
+            page,
+            limit,
+            data: products,
+        });
+    }catch (error) {
+        serverErrorResponse(res, error)
       }
     }; 
 };

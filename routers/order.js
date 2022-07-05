@@ -5,8 +5,7 @@ const  {checkToken} = require("../utils/tokenAuth");
 var router = express.Router();
 
 router.post("/placingOrder/:id", checkToken,Order.placingOrder);
-router.get("/allOrders",Order.orders);
-
+router.get("/orders", Order.orders);
 
 
 module.exports = router;

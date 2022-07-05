@@ -1,3 +1,4 @@
+const { query } = require("express");
 const productSchema = require ("../model/product");
 
 exports.createProduct = async (query) => {
@@ -17,7 +18,8 @@ exports.deleteProduct = async (query) => {
 exports.getProduct = async (query) => {
   return await productSchema.findOne(query).select("-__v ")
 };
-exports.allProducts = async (query) =>{
-  return await productSchema.find(query).select("-__v")
+exports.allProducts = async (query) =>{     
+  return await productSchema.find(query)
+  .select("-__v")
   .populate('seller_id');
 }

@@ -20,5 +20,5 @@ exports.deleteUser = async (query) => {
     return await userSchema.deleteOne(query)
    }   
 exports.allUsers = async (query) =>{
-    return await userSchema.find().select("_v -password");
+    return await userSchema.find(query).select("-__v -password");
 }

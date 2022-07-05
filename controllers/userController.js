@@ -3,6 +3,7 @@ const orderServices = require("../services/orderServices");
 const productServices = require("../services/productServices");
 const checkFields = require("../utils/checkFields");
 const mailer = require("../utils/emailSender");
+
 const {
   successResponse,
   notFoundResponse,
@@ -19,8 +20,6 @@ const { bcryptHash, comparePassword } = require("../utils/passwordUtils");
 class User {
   register = async (req, res) => {
     const { name, email, phone , password,user_type} = req.body;
-    
-    // let to = email;
     const isError = checkFields(
       {
         email,
@@ -32,17 +31,16 @@ class User {
 
     let user = await UserServices.getUser({ email });
     if (user) {
-        // mailer.emailSender();
+      // mailer.emailSender(email);
       return existAlreadyResponse(res, messageUtil.emailAlreadyExist);
     }
     
     user = await UserServices.createUser({
       ...req.body,
-    //   name: username,
     });
     user.password = await bcryptHash(password);
     await user.save();
-      // mailer.emailSender();
+    mailer.emailSender(email);
     return successResponse(res, messageUtil.ok, user);
   };
 
@@ -133,6 +131,26 @@ class User {
       res.send({message : "couldn't perform remove cart operations"})
     }
     return successResponse(res, messageUtil.ok);
+  };
+
+  stats = async (req,res) =>{
+    let sellers = await UserServices.allUsers({user_type: "seller"});
+    sellers = sellers.length;
+    let buyers = await UserServices.allUsers({user_type: "buyer"});
+    buyers = buyers.length;
+    let products = await productServices.allProducts();
+    products = products.length;
+    let orders = await orderServices.allOrders();
+    orders = orders.length;
+
+    let length = {sellers, buyers, products, orders}
+
+    if(length){
+      return successResponse(res, messageUtil.ok, length)
+    }
+    else{
+      return notFoundResponse(res, messageUtil.NotFound);
+    }
   };
 
 };  
